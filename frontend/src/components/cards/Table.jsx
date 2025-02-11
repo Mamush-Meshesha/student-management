@@ -1,29 +1,27 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-
-const data = [
-  {
-    code: "CS12",
-    name: "Introduction to CS",
-    hour: "4 hrs",
-    grade: "A",
-    status: "Completed",
-  },
-  {
-    code: "C32",
-    name: "Introduction to Mathematics",
-    hour: "9 hrs",
-    grade: "A",
-    status: "In progress",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { getCoursesRequest } from "../../store/redux/course";
 
 const Table = () => {
+  const dispatch = useDispatch();
+  const courses = useSelector((state) => state.courses.courses);
+
+  useEffect(() => {
+    dispatch(getCoursesRequest());
+  }, [dispatch]);
+
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "id",
+        header: "ID",
+        enableSorting: false,
+        size: 100,
+      },
       {
         accessorKey: "code",
         header: "Code",
@@ -33,6 +31,12 @@ const Table = () => {
         accessorKey: "name",
         header: "Course Name",
         muiTableHeadCellProps: { style: { color: "green" } },
+      },
+      {
+        accessorKey: "department.name",
+        header: "Department",
+        muiTableHeadCellProps: { style: { color: "purple" } },
+        Cell: ({ row }) => row.original.department?.name || "N/A",
       },
       {
         accessorKey: "hour",
@@ -52,7 +56,7 @@ const Table = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data,
+    data: courses || [], 
     enableRowSelection: true,
     enableColumnOrdering: true,
     enableGlobalFilter: false,
@@ -61,6 +65,8 @@ const Table = () => {
         style={{
           fontWeight: "bold",
           padding: "10px",
+          fontSize: "1.2rem",
+          color: "#333",
         }}
       >
         My Courses
@@ -68,11 +74,7 @@ const Table = () => {
     ),
   });
 
-  return (
-    <div>
-      <MaterialReactTable table={table} />
-    </div>
-  );
+  return <MaterialReactTable table={table} />;
 };
 
 export default Table;
