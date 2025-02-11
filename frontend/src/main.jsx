@@ -4,18 +4,21 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import "./index.css";
 import App from "./App.jsx";
-import store from "./store/store.js";
+import { store, persistor } from "./store/store.js";
 import LoginPage from "./pages/login.jsx"; 
+import { PersistGate } from "redux-persist/integration/react";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LoginPage />} />{" "}
-          <Route path="/home" element={<App />} />{" "}
-        </Routes>
-      </Router>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />{" "}
+            <Route path="/home" element={<App />} />{" "}
+          </Routes>
+        </Router>
+      </PersistGate>
     </Provider>
   </StrictMode>
 );

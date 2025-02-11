@@ -2,51 +2,54 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authRequest } from "../store/redux/auth";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"; // Import js-cookie
+import {jwtDecode} from "jwt-decode";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-    const { user, token, error } = useSelector((state) => state.auth);
 
 
- const handleSubmit = async (e) => {
-   e.preventDefault();
-   const data = {
-     email,
-     password,
-   };
+  const handleSubmit =  (e) => {
+    e.preventDefault();
+    const data = {
+      email,
+      password,
+    };
 
-   try {
-     const response = await dispatch(authRequest(data)); // Now this returns a promise
-     if (response && response.token) {
-       // Save the token to localStorage (or cookie)
-       localStorage.setItem("token", response.token); // Store token
-       localStorage.setItem("user", JSON.stringify(response.user)); // Store user info
+    try {
+      const response =  dispatch(authRequest(data));
 
-       // Redirect to /home after successful login
-       navigate("/home");
-     } else {
-       // Handle login failure (optional)
-       console.log("Login failed");
-     }
-   } catch (error) {
-     console.error("Login failed:", error);
-     // Optionally, show an error message to the user
-   }
- };
-  
-   useEffect(() => {
-     if (user && token) {
-       if (user.role === "STUDENT") {
-         navigate("/home"); // Navigate to home if student
-       } else {
-        console.log("error login")
+      if (response && response.token) {
+        
+        navigate("/home");
+      } else {
+        console.log("Login failed");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+ useEffect(() => {
+   const jwtToken = Cookies.get("jwt"); // Get JWT from cookie
+
+   if (jwtToken) {
+     try {
+       const decodedToken = jwtDecode(jwtToken); // Decode JWT
+       if (decodedToken.role === "STUDENT") {
+         navigate("/home"); // Redirect to home
        }
+     } catch (error) {
+       console.error("Error decoding token:", error);
+       navigate("/"); // Redirect to login if decoding fails
      }
-   }, [user, token, navigate]);
-
+   } else {
+     navigate("/"); // No token, go to login
+   }
+ }, [navigate]);
 
   return (
     <div className="h-screen flex justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500">

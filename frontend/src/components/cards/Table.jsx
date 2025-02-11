@@ -8,7 +8,7 @@ import { getCoursesRequest } from "../../store/redux/course";
 
 const Table = () => {
   const dispatch = useDispatch();
-  const courses = useSelector((state) => state.courses.courses);
+  const courses = useSelector((state) => state.course.courses);
 
   useEffect(() => {
     dispatch(getCoursesRequest());

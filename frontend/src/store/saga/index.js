@@ -1,14 +1,15 @@
 import { all } from "redux-saga/effects";
 import watchGetCourses from "./courseSaga";
 import watchGetStudent from "./studentSaga";
-import watchAuth from "./authSaga";
+import {watchAuth, watchLogout } from "./authSaga";
 
 function* rootSaga() {
 
     yield all([
         watchGetCourses(),
         watchGetStudent(),
-        watchAuth()
+        watchAuth(),
+        watchLogout()
     ])
 }
 

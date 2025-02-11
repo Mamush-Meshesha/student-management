@@ -1,17 +1,32 @@
 import axios from "axios";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { authFailure, authRequest, authSuccess } from "../redux/auth";
+import { authFailure, authRequest, authSuccess, logoutFailure, logoutRequest, logoutSuccess } from "../redux/auth";
 
 function* login(action) {
     try {
         const res = yield call(axios.post, "http://localhost:5000/api/student/login", action.payload, {
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            withCredentials: true
         })
+        console.log("API Response:", res.data);
+        //  localStorage.setItem("token", res.data.token);
+        //  localStorage.setItem("user", JSON.stringify(res.data.user));
         yield put(authSuccess(res.data))
     } catch (error) {
         yield put(authFailure(error.message))
+    }
+}
+
+function* logout() {
+    try {
+        const res = yield call(axios.get, "http://localhost:5000/api/student/logout", {
+            withCredentials: true
+        })
+        yield put(logoutSuccess(res.data))
+    } catch (error) {
+        yield put(logoutFailure(error.message))
     }
 }
 
@@ -19,4 +34,8 @@ function* watchAuth() {
     yield takeLatest(authRequest, login)
 }
 
-export default watchAuth
+function* watchLogout() {
+    yield takeLatest(logoutRequest, logout)
+}
+
+export  {watchAuth,watchLogout}
