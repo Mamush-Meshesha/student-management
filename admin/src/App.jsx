@@ -3,13 +3,16 @@ import MiniDrawer from "./components/Sidebar"; // Import Sidebar
 import AllStudents from "./pages/students";
 import Courses from "./pages/courses";
 import Departments from "./pages/departments";
+import Login from "./pages/login"
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="login" element={<Login />} />
         <Route path="/" element={<MiniDrawer />}>
           <Route index element={<AllStudents />} />
+
           <Route path="students" element={<AllStudents />} />
           <Route path="courses" element={<Courses />} />
           <Route path="departments" element={<Departments />} />
