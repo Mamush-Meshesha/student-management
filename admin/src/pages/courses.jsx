@@ -15,14 +15,14 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { getDepartement } from "../store/redux/student";
+import { createStudentRequest, deleteStudentRequest, getDepartement, getStudentrequest, updateStudentRequest } from "../store/redux/student";
 
 const Courses = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const department = useSelector((state) => state.student.department);
-  console.table(department);
+  const course = useSelector((state) => state.student.courses);
+  console.table(course);
 
   useEffect(() => {
     dispatch(getDepartement());
@@ -67,7 +67,7 @@ const Courses = () => {
         ),
       },
     ],
-    [validationErrors, department]
+    [validationErrors, course]
   );
 
   const handleCreateUser = ({ values, table }) => {
@@ -129,7 +129,7 @@ const Courses = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data: department,
+    data: course,
     createDisplayMode: "modal",
     editDisplayMode: "modal",
     getRowId: (row) => row.id,
