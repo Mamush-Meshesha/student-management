@@ -15,21 +15,18 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { createStudentRequest, deleteStudentRequest, getDepartement, getStudentrequest, updateStudentRequest } from "../../store/redux/student";
+import { getDepartement } from "../store/redux/student";
 
-const Table = () => {
+const Courses = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-const dispatch = useDispatch()
-  const student = useSelector((state) => state.student.student) 
-  const department = useSelector((state) => state.student.department)
-  console.table(student);
+  const dispatch = useDispatch();
+  const department = useSelector((state) => state.student.department);
   console.table(department);
-  
+
   useEffect(() => {
-    dispatch(getStudentrequest());
-    dispatch(getDepartement())
-  },[dispatch])
+    dispatch(getDepartement());
+  }, [dispatch]);
   const columns = useMemo(
     () => [
       { accessorKey: "id", header: "Id", enableEditing: false, size: 80 },
@@ -45,62 +42,12 @@ const dispatch = useDispatch()
             setValidationErrors({ ...validationErrors, name: undefined }),
         },
       },
+
       {
-        accessorKey: "email",
-        header: "Email",
-        muiEditTextFieldProps: {
-          type: "email",
-          required: true,
-          error: !!validationErrors?.email,
-          helperText: validationErrors?.email,
-          onFocus: () =>
-            setValidationErrors({ ...validationErrors, email: undefined }),
-        },
-      },
-      {
-        accessorKey: "password",
-        header: "Password",
-        muiEditTextFieldProps: {
-          type: "password",
-          required: true,
-          error: !!validationErrors?.password,
-          helperText: validationErrors?.password,
-          onFocus: () =>
-            setValidationErrors({ ...validationErrors, password: undefined }),
-        },
-      },
-      {
-        accessorKey: "departmentId",
-        header: "Department",
-        editVariant: "select",
-        editSelectOptions: department.map((dept) => ({
-          value: dept.id,
-          label: dept.name,
-        })),
-        muiEditTextFieldProps: {
-          select: true,
-          required: true,
-          error: !!validationErrors?.departmentId,
-          helperText: validationErrors?.departmentId,
-        },
-      },
-      {
-        accessorKey: "grade",
-        header: "Grade",
-        muiEditTextFieldProps: {
-          type: "number",
-          required: true,
-          error: !!validationErrors?.grade,
-          helperText: validationErrors?.grade,
-          onFocus: () =>
-            setValidationErrors({ ...validationErrors, grade: undefined }),
-        },
-      },
-      {
-        accessorKey: "actions", // Add an actions column
+        accessorKey: "actions",
         header: "Actions",
         muiTableBodyCellProps: {
-          align: "right", // Align the action buttons to the right
+          align: "right",
         },
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", justifyContent: "", gap: 1 }}>
@@ -152,45 +99,6 @@ const dispatch = useDispatch()
     table.setCreatingRow(null); // Close modal
   };
 
-  // const handleCreateUser = async ({ values, table }) => {
-  //   const newValidationErrors = validateUser(values);
-  //   if (Object.values(newValidationErrors).some((error) => error)) {
-  //     setValidationErrors(newValidationErrors);
-  //     return;
-  //   }
-
-  //   setValidationErrors({});
-  //   setIsLoading(true);
-
-  //   setTimeout(() => {
-  //     setUsers((prevUsers) => [
-  //       ...prevUsers,
-  //       { ...values, id: (Math.random() + 1).toString(36).substring(7) },
-  //     ]);
-  //     table.setCreatingRow(null);
-  //     setIsLoading(false);
-  //   }, 1000);
-  // };
-
-  // const handleSaveUser = async ({ values, table }) => {
-  //   const newValidationErrors = validateUser(values);
-  //   if (Object.values(newValidationErrors).some((error) => error)) {
-  //     setValidationErrors(newValidationErrors);
-  //     return;
-  //   }
-
-  //   setValidationErrors({});
-  //   setIsLoading(true);
-
-  //   setTimeout(() => {
-  //     setUsers((prevUsers) =>
-  //       prevUsers.map((user) => (user.id === values.id ? values : user))
-  //     );
-  //     table.setEditingRow(null);
-  //     setIsLoading(false);
-  //   }, 1000);
-  // };
-
   const handleSaveUser = ({ values, table }) => {
     const newValidationErrors = validateUser(values);
     if (Object.values(newValidationErrors).some((error) => error)) {
@@ -213,15 +121,15 @@ const dispatch = useDispatch()
     table.setEditingRow(null); // Close the edit modal
   };
 
-const openDeleteConfirmModal = (row) => {
-  if (window.confirm("Are you sure you want to delete this user?")) {
-    dispatch(deleteStudentRequest(row.original.id)); // Dispatching the delete request
-  }
-};
+  const openDeleteConfirmModal = (row) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      dispatch(deleteStudentRequest(row.original.id)); // Dispatching the delete request
+    }
+  };
 
   const table = useMaterialReactTable({
     columns,
-    data: student,
+    data: department,
     createDisplayMode: "modal",
     editDisplayMode: "modal",
     getRowId: (row) => row.id,
@@ -253,7 +161,6 @@ const openDeleteConfirmModal = (row) => {
         </DialogContent>
         <DialogActions>
           <MRT_EditActionButtons variant="text" table={table} row={row} />
-          
         </DialogActions>
       </>
     ),
@@ -281,4 +188,4 @@ const validateUser = (user) => {
   return errors;
 };
 
-export default Table;
+export default Courses;
