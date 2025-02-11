@@ -15,6 +15,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+
 model Student {
   id         String  @id @default(uuid())
   name       String
@@ -22,7 +28,8 @@ model Student {
   password   String
   department Department @relation(fields: [departmentId], references: [id])
   departmentId String
-  grade      Float
+  role       Role    @default(STUDENT)
+  grade      String
   coursesTaken CourseTaken[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

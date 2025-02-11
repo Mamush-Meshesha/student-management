@@ -1,15 +1,24 @@
 // import prisma from "../utils/prisma";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
+import { generateToken } from '../utils/jwt.js';
 const prisma = new PrismaClient();
 export const createStudent = async (req, res) => {
   try {
-    const { name, email, password, departmentId, grade } = req.body;
+    const {
+      name,
+      email,
+      password,
+      departmentId,
+      grade,
+      role = "STUDENT",
+    } = req.body; // Default role to STUDENT
 
     // Check if email already exists
     const existingStudent = await prisma.student.findUnique({
       where: { email },
     });
+
     if (existingStudent) {
       return res.status(400).json({ error: "Email already exists" });
     }
@@ -22,15 +31,19 @@ export const createStudent = async (req, res) => {
       data: {
         name,
         email,
-        password: hashedPassword, // Store hashed password
+        password: hashedPassword,
         department: {
           connect: { id: departmentId }, // Connect to existing department
         },
         grade,
+        role, // Assign role
       },
     });
 
-    res.status(201).json(student);
+    // Generate JWT token
+    generateToken(res, student.id, student.role);
+
+    res.status(201).json({ message: "Student created successfully", student });
   } catch (error) {
     console.error("Error creating student:", error);
     res.status(500).json({ error: "Something went wrong" });
@@ -38,28 +51,63 @@ export const createStudent = async (req, res) => {
 };
 
 
-export const createDepartment = async (req, res) => {
+
+export const getStudents = async (req, res) => {
   try {
-    const { name } = req.body;
-
-    // Check if department already exists
-    const existingDepartment = await prisma.department.findUnique({
-      where: { name },
-    });
-    if (existingDepartment) {
-      return res.status(400).json({ error: "Department already exists" });
-    }
-
-    // Create department
-    const department = await prisma.department.create({
-      data: {
-        name,
+    const students = await prisma.student.findMany({
+      include: {
+        department: true,
       },
     });
-
-    res.status(201).json(department);
+    res.status(200).json(students);
   } catch (error) {
-    console.error("Error creating department:", error);
+    console.error("Error fetching students:", error);
     res.status(500).json({ error: "Something went wrong" });
   }
 };
+
+
+
+export const updateStudent = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, password, departmentId, grade } = req.body;
+
+  try {
+     let hashedPassword = password;
+     if (password) {
+       hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+     }
+    const updatedStudent = await prisma.student.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        department: {
+          connect: { id: departmentId },
+        },
+        grade,
+      },
+    });
+
+    res.status(200).json(updatedStudent);
+  } catch (error) {
+    console.error("Error updating student:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+}
+
+export const deleteStudent = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.student.delete({
+      where: { id },
+    });
+
+    res.status(200).json({ message: "Student deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+}

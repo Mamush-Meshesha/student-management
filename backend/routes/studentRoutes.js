@@ -1,16 +1,18 @@
 import express from "express";
 import {
-  createDepartment,
+  
   createStudent,
-//   getAllStudents,
-//   getStudentById,
-//   updateStudent,
-//   deleteStudent,
+  deleteStudent,
+  getStudents,
+  updateStudent,
 } from "../controllers/studentController.js";
+import { protect, protectRole } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 router.post("/student", createStudent);
-router.post("/department", createDepartment)
+router.get("/students" ,getStudents)
+router.put("/student/:id", updateStudent)
+router.delete("/student/:id",deleteStudent)
 
 
 export default router;
