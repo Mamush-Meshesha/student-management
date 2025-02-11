@@ -1,4 +1,6 @@
 import prisma from "../utils/prisma.js";
+import bcrypt from "bcrypt";
+import { generateToken } from "../utils/jwt.js";
 
 export const login = async (req, res) => {
   try {
