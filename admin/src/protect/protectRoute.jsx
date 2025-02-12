@@ -43,15 +43,31 @@ import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
+// const ProtectedRoute = ({ children }) => {
+//   const token = Cookies.get("jwt"); // Get token from cookies
+
+//   if (!token) {
+//     return <Navigate to="/login" replace />;
+//   }
+
+//   try {
+//     const decoded = jwtDecode(token); // Decode token
+//     if (decoded.role !== "ADMIN") {
+//       return <Navigate to="/login" replace />;
+//     }
+//   } catch (error) {
+//     console.error("Invalid token:", error);
+//     return <Navigate to="/login" replace />;
+//   }
+
+//   return children;
 const ProtectedRoute = ({ children }) => {
-  const token = Cookies.get("jwt"); // Get token from cookies
+  const token = Cookies.get("jwt");
 
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
+  if (!token) return <Navigate to="/login" replace />;
+  
   try {
-    const decoded = jwtDecode(token); // Decode token
+    const decoded = jwtDecode(token);
     if (decoded.role !== "ADMIN") {
       return <Navigate to="/login" replace />;
     }
@@ -62,6 +78,7 @@ const ProtectedRoute = ({ children }) => {
 
   return children;
 };
+
 
 export default ProtectedRoute;
 
