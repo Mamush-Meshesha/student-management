@@ -38,18 +38,8 @@ const Table = () => {
         muiTableHeadCellProps: { style: { color: "purple" } },
         Cell: ({ row }) => row.original.department?.name || "N/A",
       },
-      {
-        accessorKey: "hour",
-        header: "Hours",
-      },
-      {
-        accessorKey: "grade",
-        header: "Grade",
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
+
+
     ],
     []
   );
