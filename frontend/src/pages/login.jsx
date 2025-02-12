@@ -12,25 +12,18 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
 
-  const handleSubmit =  (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       email,
       password,
     };
 
-    try {
-      const response =  dispatch(authRequest(data));
 
-      if (response && response.token) {
-        
-        navigate("/home");
-      } else {
-        console.log("Login failed");
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+    dispatch(authRequest(data));
+
+       await navigate("/home");
+
   };
 
  useEffect(() => {

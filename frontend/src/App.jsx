@@ -16,24 +16,24 @@ function App() {
   ];
   const dispatch = useDispatch()
  
-  const navigate = useNavigate()
-   useEffect(() => {
-     const jwtToken = Cookies.get("jwt");
+  // const navigate = useNavigate()
+  //  useEffect(() => {
+  //    const jwtToken = Cookies.get("jwt");
   
-     if (jwtToken) {
-       try {
-         const decodedToken = jwtDecode(jwtToken); 
-         if (!decodedToken) {
-           navigate("/"); 
-         }
-       } catch (error) {
-         console.error("Error decoding token:", error);
-         navigate("/home"); 
-       }
-     } else {
-       navigate("/"); 
-     }
-   }, [navigate]);
+  //    if (jwtToken) {
+  //      try {
+  //        const decodedToken = jwtDecode(jwtToken); 
+  //        if (!decodedToken) {
+  //          navigate("/"); 
+  //        }
+  //      } catch (error) {
+  //        console.error("Error decoding token:", error);
+  //        navigate("/home"); 
+  //      }
+  //    } else {
+  //      navigate("/"); 
+  //    }
+  //  }, [navigate]);
   return (
     <>
       <Layout>
