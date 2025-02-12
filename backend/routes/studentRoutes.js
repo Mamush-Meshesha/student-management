@@ -9,10 +9,10 @@ import {
 import { protect, protectRole } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
-router.post("/student", createStudent);
+router.post("/student", protect,protectRole("ADMIN") ,createStudent);
 router.get("/students" ,getStudents)
-router.put("/student/:id", updateStudent)
-router.delete("/student/:id",deleteStudent)
+router.put("/student/:id",protect,protectRole("ADMIN") ,updateStudent)
+router.delete("/student/:id",protect,protectRole("ADMIN"),deleteStudent)
 
 
 export default router;
