@@ -17,7 +17,6 @@ const isAuth = useSelector((state) => state.auth);
     };
 
     dispatch(authRequest(data));
-    await navigate("/");
   };
 
  useEffect(() => {
