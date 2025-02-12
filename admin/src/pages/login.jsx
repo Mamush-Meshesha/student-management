@@ -19,13 +19,13 @@ const isAuth = useSelector((state) => state.auth);
     dispatch(authRequest(data));
   };
 
-useEffect(() => {
-  if (isAuth.isAuth) {
-    setTimeout(() => {
-      navigate("/", { replace: true });
-    }, 100); 
-  }
-}, [isAuth.isAuth, navigate]);
+// useEffect(() => {
+//   if (isAuth.isAuth) {
+//     setTimeout(() => {
+//       navigate("/", { replace: true });
+//     }, 100); 
+//   }
+// }, [isAuth.isAuth, navigate]);
 
 
 
