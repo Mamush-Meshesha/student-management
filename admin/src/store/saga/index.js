@@ -1,6 +1,7 @@
 import {all} from "redux-saga/effects"
-import { watchCreateStudent, watchDeleteStudent, watchGetAllDepartments, watchGetStudent, watchUpdateStudent } from "./studentSaga"
+import { watchCreateDepartment, watchCreateStudent, watchDeleteDepartment, watchDeleteStudent, watchGetAllDepartments, watchGetStudent, watchUpdateDepartment, watchUpdateStudent } from "./studentSaga"
 import { watchCreateCourse, watchDeleteCourse, watchGetCourse, watchUpdateCourse } from "./courseSaga"
+import { watchAuth, watchLogout } from "./authSaga"
 function* rootSaga() {
 
     yield all([
@@ -12,7 +13,12 @@ function* rootSaga() {
         watchDeleteCourse(),
         watchGetCourse(),
         watchUpdateCourse(),
-        watchGetAllDepartments()
+        watchGetAllDepartments(),
+        watchCreateDepartment(),
+        watchLogout(),
+        watchAuth(),
+        watchDeleteDepartment(),
+        watchUpdateDepartment()
     ])
 }
 

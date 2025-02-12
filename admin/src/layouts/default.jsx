@@ -9,11 +9,11 @@ const Layout = ({ children }) => {
       <main className="flex-grow">{children}</main>
 
       {/* Footer remains at the bottom */}
-      <footer className="bg-gray-800 z-100  text-white text-center py-4">
+      {/* <footer className="bg-gray-800 z-100  text-white text-center py-4">
         <p>
           &copy; {new Date().getFullYear()} Your Company. All rights reserved.
         </p>
-      </footer>
+      </footer> */}
     </div>
   );
 };

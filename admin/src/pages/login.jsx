@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useEffect, useState } from "react";
+import { useDispatch, useSelector,  } from "react-redux";
 import { authRequest } from "../store/redux/auth";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"; // Import js-cookie
-import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+const isAuth = useSelector((state) => state.auth);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -18,36 +16,16 @@ const LoginPage = () => {
       password,
     };
 
-    try {
-      const response = await dispatch(authRequest(data));
-
-      if (response && response.token) {
-        navigate("/home");
-      } else {
-        console.log("Login failed");
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+    dispatch(authRequest(data));
+    await navigate("/");
   };
 
   useEffect(() => {
-    const jwtToken = Cookies.get("jwt"); // Get JWT from cookie
-
-    if (jwtToken) {
-      try {
-        const decodedToken = jwtDecode(jwtToken); // Decode JWT
-        if (decodedToken.role === "ADMIN") {
-          navigate("/home"); // Redirect to home
-        }
-      } catch (error) {
-        console.error("Error decoding token:", error);
-        navigate("/"); // Redirect to login if decoding fails
-      }
-    } else {
-      navigate("/"); // No token, go to login
+    if (isAuth.isAuth) {
+      navigate("/");
     }
-  }, [navigate]);
+  }, [isAuth.isAuth, navigate]);
+
 
   return (
     <div className="h-screen  flex justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500">

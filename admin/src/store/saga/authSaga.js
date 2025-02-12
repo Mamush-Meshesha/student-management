@@ -23,8 +23,6 @@ function* login(action) {
       }
     );
     console.log("API Response:", res.data);
-    //  localStorage.setItem("token", res.data.token);
-    //  localStorage.setItem("user", JSON.stringify(res.data.user));
     yield put(authSuccess(res.data));
   } catch (error) {
     yield put(authFailure(error.message));

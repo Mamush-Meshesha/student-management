@@ -75,6 +75,39 @@ export const studentSlice = createSlice({
     getDepartmentFailure: (state, action) => {
       (state.loading = false), (state.error = action.payload);
     },
+    createDepartmentRequest: (state) => {
+      state.loading = true;
+    },
+    createDepartmentSuccess: (state, action) => {
+      state.loading = false;
+      state.department = action.payload;
+    },
+    createDepartmentFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    updateDepartmentRequest: (state) => {
+      state.loading = true
+    },
+    updateDepartmentSuccess: (state, action) => {
+      state.loading = false
+      state.department = state.department.map((dep) => dep.id === action.payload.id ? action.payload : dep)
+    },
+    updateDepartmentFailure: (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    },
+    deleteDepartmentRequest: (state) => {
+      state.loading = true
+    },
+    deleteDepartmentSuccess: (state, action) => {
+      state.loading = false
+      state.department = state.department.filter((dep) => dep.id !== action.payload)
+    },
+    deleteDepartmentFailure: (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    }
   },
 });
 
@@ -94,7 +127,16 @@ export const {
   updateStudentSuccess,
   getDepartement,
   getDepartmentFailure,
-  getDepartmentSuccess
+  getDepartmentSuccess,
+  createDepartmentFailure,
+  createDepartmentRequest,
+  createDepartmentSuccess,
+  updateDepartmentFailure,
+  updateDepartmentRequest,
+  updateDepartmentSuccess,
+  deleteDepartmentFailure,
+  deleteDepartmentRequest,
+  deleteDepartmentSuccess
 } = studentSlice.actions;
 
 export default studentSlice.reducer;

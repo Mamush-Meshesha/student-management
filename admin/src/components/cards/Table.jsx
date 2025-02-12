@@ -15,21 +15,27 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { createStudentRequest, deleteStudentRequest, getDepartement, getStudentrequest, updateStudentRequest } from "../../store/redux/student";
+import {
+  createStudentRequest,
+  deleteStudentRequest,
+  getDepartement,
+  getStudentrequest,
+  updateStudentRequest,
+} from "../../store/redux/student";
 
 const Table = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-const dispatch = useDispatch()
-  const student = useSelector((state) => state.student.student) 
-  const department = useSelector((state) => state.student.department)
+  const dispatch = useDispatch();
+  const student = useSelector((state) => state.student.student);
+  const department = useSelector((state) => state.student.department);
   console.table(student);
   console.table(department);
-  
+
   useEffect(() => {
     dispatch(getStudentrequest());
-    dispatch(getDepartement())
-  },[dispatch])
+    dispatch(getDepartement());
+  }, [dispatch]);
   const columns = useMemo(
     () => [
       { accessorKey: "id", header: "Id", enableEditing: false, size: 80 },
@@ -97,10 +103,10 @@ const dispatch = useDispatch()
         },
       },
       {
-        accessorKey: "actions", // Add an actions column
+        accessorKey: "actions",
         header: "Actions",
         muiTableBodyCellProps: {
-          align: "right", // Align the action buttons to the right
+          align: "right", 
         },
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", justifyContent: "", gap: 1 }}>
@@ -124,7 +130,6 @@ const dispatch = useDispatch()
   );
 
   const handleCreateUser = ({ values, table }) => {
-    // Validate user input
     const newValidationErrors = validateUser(values);
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors);
@@ -133,7 +138,6 @@ const dispatch = useDispatch()
 
     setValidationErrors({});
 
-    // Dispatch Redux action with correct structure
     dispatch(
       createStudentRequest({
         name: values.name,
@@ -144,52 +148,14 @@ const dispatch = useDispatch()
       })
     );
 
-    // Refresh student list after creation
     setTimeout(() => {
       dispatch(getStudentrequest());
     }, 500);
 
-    table.setCreatingRow(null); // Close modal
+    table.setCreatingRow(null); 
   };
 
-  // const handleCreateUser = async ({ values, table }) => {
-  //   const newValidationErrors = validateUser(values);
-  //   if (Object.values(newValidationErrors).some((error) => error)) {
-  //     setValidationErrors(newValidationErrors);
-  //     return;
-  //   }
-
-  //   setValidationErrors({});
-  //   setIsLoading(true);
-
-  //   setTimeout(() => {
-  //     setUsers((prevUsers) => [
-  //       ...prevUsers,
-  //       { ...values, id: (Math.random() + 1).toString(36).substring(7) },
-  //     ]);
-  //     table.setCreatingRow(null);
-  //     setIsLoading(false);
-  //   }, 1000);
-  // };
-
-  // const handleSaveUser = async ({ values, table }) => {
-  //   const newValidationErrors = validateUser(values);
-  //   if (Object.values(newValidationErrors).some((error) => error)) {
-  //     setValidationErrors(newValidationErrors);
-  //     return;
-  //   }
-
-  //   setValidationErrors({});
-  //   setIsLoading(true);
-
-  //   setTimeout(() => {
-  //     setUsers((prevUsers) =>
-  //       prevUsers.map((user) => (user.id === values.id ? values : user))
-  //     );
-  //     table.setEditingRow(null);
-  //     setIsLoading(false);
-  //   }, 1000);
-  // };
+ 
 
   const handleSaveUser = ({ values, table }) => {
     const newValidationErrors = validateUser(values);
@@ -201,23 +167,21 @@ const dispatch = useDispatch()
     setValidationErrors({});
     setIsLoading(true);
 
-    // Dispatch Redux Toolkit action for updating the student
     dispatch(updateStudentRequest(values));
 
-    // Refresh student list after update
     setTimeout(() => {
-      dispatch(getStudentrequest()); // Fetch updated students
+      dispatch(getStudentrequest()); 
       setIsLoading(false);
     }, 500);
 
-    table.setEditingRow(null); // Close the edit modal
+    table.setEditingRow(null); 
   };
 
-const openDeleteConfirmModal = (row) => {
-  if (window.confirm("Are you sure you want to delete this user?")) {
-    dispatch(deleteStudentRequest(row.original.id)); // Dispatching the delete request
-  }
-};
+  const openDeleteConfirmModal = (row) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      dispatch(deleteStudentRequest(row.original.id)); 
+    }
+  };
 
   const table = useMaterialReactTable({
     columns,
@@ -253,7 +217,6 @@ const openDeleteConfirmModal = (row) => {
         </DialogContent>
         <DialogActions>
           <MRT_EditActionButtons variant="text" table={table} row={row} />
-          
         </DialogActions>
       </>
     ),

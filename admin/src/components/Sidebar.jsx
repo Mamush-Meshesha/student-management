@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -20,6 +20,9 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { Outlet } from "react-router-dom";
+import { Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { logoutRequest } from "../store/redux/auth";
 
 const drawerWidth = 240;
 
@@ -28,6 +31,7 @@ const menuItems = [
   { text: "Courses", path: "/courses", icon: <MailIcon /> },
   { text: "Departments", path: "/departments", icon: <InboxIcon /> },
 ];
+
 
 
 const openedMixin = (theme) => ({
@@ -111,7 +115,13 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logoutRequest());
+    navigate("/login");
 
+  };
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -139,9 +149,12 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Student Management Dashboard
-          </Typography>
+          <div className="flex justify-between w-full">
+            <Typography variant="h6" noWrap component="div">
+              Student Management Dashboard
+            </Typography>
+            <Button onClick={handleLogout}>LogOut</Button>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

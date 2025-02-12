@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import {
-  MRT_EditActionButtons,
   MaterialReactTable,
+  MRT_EditActionButtons,
   useMaterialReactTable,
 } from "material-react-table";
 import {
@@ -15,17 +15,24 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { createStudentRequest, deleteStudentRequest, getDepartement, getStudentrequest, updateStudentRequest } from "../store/redux/student";
+import {
+  createStudentRequest,
+  deleteStudentRequest,
+  getStudentrequest,
+  updateStudentRequest,
+} from "../store/redux/student";
+import { createCouserRequest, deleteCouserRequest, getCoursesRequest, updateCouserRequest } from "../store/redux/course";
 
 const Courses = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const course = useSelector((state) => state.student.courses);
+  const course = useSelector((state) => state.course.courses);
+  const department = useSelector((state) => state.student.department);
   console.table(course);
 
   useEffect(() => {
-    dispatch(getDepartement());
+    dispatch(getCoursesRequest());
   }, [dispatch]);
   const columns = useMemo(
     () => [
@@ -40,6 +47,34 @@ const Courses = () => {
           helperText: validationErrors?.name,
           onFocus: () =>
             setValidationErrors({ ...validationErrors, name: undefined }),
+        },
+      },
+
+      {
+        accessorKey: "departmentId",
+        header: "Department",
+        editVariant: "select",
+        editSelectOptions: department.map((dept) => ({
+          value: dept.id,
+          label: dept.name,
+        })),
+        muiEditTextFieldProps: {
+          select: true,
+          required: true,
+          error: !!validationErrors?.departmentId,
+          helperText: validationErrors?.departmentId,
+        },
+      },
+      {
+        accessorKey: "code",
+        header: "code",
+        muiEditTextFieldProps: {
+          type: "number",
+          required: true,
+          error: !!validationErrors?.code,
+          helperText: validationErrors?.code,
+          onFocus: () =>
+            setValidationErrors({ ...validationErrors, grade: undefined }),
         },
       },
 
@@ -70,60 +105,62 @@ const Courses = () => {
     [validationErrors, course]
   );
 
-  const handleCreateUser = ({ values, table }) => {
-    // Validate user input
-    const newValidationErrors = validateUser(values);
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors);
-      return;
-    }
+const handleCreateCourse = ({ values, table }) => {
+  const newValidationErrors = validateCourse(values);
+  if (Object.values(newValidationErrors).some((error) => error)) {
+    setValidationErrors(newValidationErrors);
+    return;
+  }
 
-    setValidationErrors({});
+  setValidationErrors({});
 
-    // Dispatch Redux action with correct structure
-    dispatch(
-      createStudentRequest({
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        departmentId: values.departmentId,
-        grade: values.grade,
-      })
-    );
+  dispatch(
+    createCouserRequest({
+      name: values.name,
+      departmentId: values.departmentId,
+      code: values.code,
+    })
+  );
 
-    // Refresh student list after creation
-    setTimeout(() => {
-      dispatch(getStudentrequest());
-    }, 500);
+  setTimeout(() => {
+    dispatch(getCoursesRequest());
+  }, 500);
 
-    table.setCreatingRow(null); // Close modal
-  };
+  table.setCreatingRow(null);
+};
 
-  const handleSaveUser = ({ values, table }) => {
-    const newValidationErrors = validateUser(values);
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors);
-      return;
-    }
+const validateCourse = (course) => {
+  const errors = {};
+  if (!course.name) errors.name = "Name is required";
+  if (!course.departmentId) errors.departmentId = "Department is required";
+  if (!course.code) errors.code = "Code is required";
+  return errors;
+};
 
-    setValidationErrors({});
-    setIsLoading(true);
 
-    // Dispatch Redux Toolkit action for updating the student
-    dispatch(updateStudentRequest(values));
+const handleSaveCourse = ({ values, table }) => {
+  const newValidationErrors = validateCourse(values);
+  if (Object.values(newValidationErrors).some((error) => error)) {
+    setValidationErrors(newValidationErrors);
+    return;
+  }
 
-    // Refresh student list after update
-    setTimeout(() => {
-      dispatch(getStudentrequest()); // Fetch updated students
-      setIsLoading(false);
-    }, 500);
+  setValidationErrors({});
+  setIsLoading(true);
 
-    table.setEditingRow(null); // Close the edit modal
-  };
+  dispatch(updateCouserRequest(values)); 
 
+  setTimeout(() => {
+    dispatch(getCoursesRequest()); 
+    setIsLoading(false);
+  }, 500);
+
+  table.setEditingRow(null);
+};
+  
   const openDeleteConfirmModal = (row) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      dispatch(deleteStudentRequest(row.original.id)); // Dispatching the delete request
+    if (window.confirm("Are you sure you want to delete this course?")) {
+      dispatch(deleteCouserRequest(row.original.id)); 
     }
   };
 
@@ -135,12 +172,12 @@ const Courses = () => {
     getRowId: (row) => row.id,
     muiTableContainerProps: { sx: { minHeight: "500px" } },
     onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateUser,
+    onCreatingRowSave: handleCreateCourse,
     onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleSaveUser,
+    onEditingRowSave: handleSaveCourse,
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
-        <DialogTitle variant="h3">Create New User</DialogTitle>
+        <DialogTitle variant="h5">Create Course</DialogTitle>
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >
@@ -166,7 +203,7 @@ const Courses = () => {
     ),
     renderTopToolbarCustomActions: ({ table }) => (
       <Button variant="contained" onClick={() => table.setCreatingRow(true)}>
-        Create New User
+        Create New Course
       </Button>
     ),
     state: {
@@ -177,7 +214,6 @@ const Courses = () => {
   return <MaterialReactTable table={table} />;
 };
 
-// Validation Function
 const validateUser = (user) => {
   const errors = {};
   if (!user.name) errors.name = "Name is required";

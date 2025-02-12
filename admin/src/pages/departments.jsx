@@ -15,7 +15,12 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { getDepartement } from "../store/redux/student";
+import {
+  createDepartmentRequest,
+  deleteDepartmentRequest,
+  getDepartement,
+  updateDepartmentRequest,
+} from "../store/redux/student";
 
 
 const Department = () => {
@@ -23,18 +28,17 @@ const Department = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const department = useSelector((state) => state.student.department);
-  console.table(department);
 
   useEffect(() => {
-    dispatch(getDepartement())
+    dispatch(getDepartement());
   }, [dispatch]);
+console.log("departments",department)
   const columns = useMemo(
     () => [
-      { accessorKey: "id", header: "Id", enableEditing: false, size: 80 },
-
+      { accessorKey: "id", header: "ID", enableEditing: false, size: 80 },
       {
         accessorKey: "name",
-        header: "Name",
+        header: "Department Name",
         muiEditTextFieldProps: {
           required: true,
           error: !!validationErrors?.name,
@@ -43,15 +47,14 @@ const Department = () => {
             setValidationErrors({ ...validationErrors, name: undefined }),
         },
       },
-     
       {
-        accessorKey: "actions", 
+        accessorKey: "actions",
         header: "Actions",
         muiTableBodyCellProps: {
           align: "right",
         },
         Cell: ({ row }) => (
-          <Box sx={{ display: "flex", justifyContent: "", gap: 1 }}>
+          <Box sx={{ display: "flex", gap: 1 }}>
             <IconButton
               color="primary"
               onClick={() => table.setEditingRow(row)}
@@ -68,81 +71,65 @@ const Department = () => {
         ),
       },
     ],
-    [validationErrors, department]
+    [validationErrors]
   );
 
-  const handleCreateUser = ({ values, table }) => {
-    // Validate user input
-    const newValidationErrors = validateUser(values);
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors);
+  const handleCreateDepartment = ({ values, table }) => {
+    const errors = validateDepartment(values);
+    if (Object.values(errors).some((error) => error)) {
+      setValidationErrors(errors);
       return;
     }
 
     setValidationErrors({});
+    dispatch(createDepartmentRequest({ name: values.name }));
 
-    // Dispatch Redux action with correct structure
-    dispatch(
-      createStudentRequest({
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        departmentId: values.departmentId,
-        grade: values.grade,
-      })
-    );
-
-    // Refresh student list after creation
     setTimeout(() => {
-      dispatch(getStudentrequest());
+      dispatch(getDepartement());
     }, 500);
 
-    table.setCreatingRow(null); // Close modal
+    table.setCreatingRow(null);
   };
 
-
-  const handleSaveUser = ({ values, table }) => {
-    const newValidationErrors = validateUser(values);
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors);
+  const handleSaveDepartment = ({ values, table }) => {
+    const errors = validateDepartment(values);
+    if (Object.values(errors).some((error) => error)) {
+      setValidationErrors(errors);
       return;
     }
 
     setValidationErrors({});
     setIsLoading(true);
+    dispatch(updateDepartmentRequest(values));
 
-    // Dispatch Redux Toolkit action for updating the student
-    dispatch(updateStudentRequest(values));
-
-    // Refresh student list after update
     setTimeout(() => {
-      dispatch(getStudentrequest()); // Fetch updated students
+      dispatch(getDepartement());
       setIsLoading(false);
     }, 500);
 
-    table.setEditingRow(null); // Close the edit modal
+    table.setEditingRow(null);
   };
 
   const openDeleteConfirmModal = (row) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      dispatch(deleteStudentRequest(row.original.id)); // Dispatching the delete request
+    if (window.confirm("Are you sure you want to delete this department?")) {
+      dispatch(deleteDepartmentRequest(row.original.id));
     }
   };
 
   const table = useMaterialReactTable({
     columns,
-    data: department,
+    data: department || [],
     createDisplayMode: "modal",
     editDisplayMode: "modal",
     getRowId: (row) => row.id,
     muiTableContainerProps: { sx: { minHeight: "500px" } },
     onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateUser,
+    onCreatingRowSave: handleCreateDepartment,
     onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleSaveUser,
+    onEditingRowSave: handleSaveDepartment,
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
-        <DialogTitle variant="h3">Create New User</DialogTitle>
+        <DialogTitle>Create New Department</DialogTitle>
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >
@@ -155,7 +142,7 @@ const Department = () => {
     ),
     renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
-        <DialogTitle variant="h3">Edit User</DialogTitle>
+        <DialogTitle>Edit Department</DialogTitle>
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
@@ -168,25 +155,19 @@ const Department = () => {
     ),
     renderTopToolbarCustomActions: ({ table }) => (
       <Button variant="contained" onClick={() => table.setCreatingRow(true)}>
-        Create New User
+        Create New Department
       </Button>
     ),
-    state: {
-      isLoading,
-    },
+    state: { isLoading },
   });
 
   return <MaterialReactTable table={table} />;
 };
 
 // Validation Function
-const validateUser = (user) => {
+const validateDepartment = (department) => {
   const errors = {};
-  if (!user.name) errors.name = "Name is required";
-  if (!user.email) errors.email = "Email is required";
-  if (!user.password) errors.password = "Password is required";
-  if (user.grade === undefined || user.grade < 0)
-    errors.grade = "Grade must be a positive number";
+  if (!department.name) errors.name = "Department name is required";
   return errors;
 };
 

@@ -2,9 +2,14 @@ import axios from "axios";
 import { call, put } from "redux-saga/effects";
 import { takeEvery } from "redux-saga/effects";
 import {
+  createCouserFailure,
   createCouserRequest,
+  createCouserSuccess,
+  deleteCouserFailure,
   deleteCouserRequest,
+  deleteCouserSuccess,
   getCoursesRequest,
+  getCoursesSuccess,
   updateCouserRequest,
 } from "../redux/course";
 function* createCourse(action) {
@@ -20,9 +25,9 @@ function* createCourse(action) {
         withCredentials: true,
       }
     );
-    yield put(res.data);
+    yield put(createCouserSuccess(res.data));
   } catch (error) {
-    yield put(error.message);
+    yield put(createCouserFailure(error.merror.message));
   }
 }
 
@@ -33,7 +38,7 @@ function* getCourse() {
       "http://localhost:5000/api/courses",
       { withCredentials: true }
     );
-    yield put(res.data);
+    yield put(getCoursesSuccess(res.data));
   } catch (error) {
     yield put(error.message);
   }
@@ -53,16 +58,16 @@ function* updateCourse(action) {
   }
 }
 
-function* deleteCourse() {
+function* deleteCourse(action) {
   try {
     const res = yield call(
       axios.delete,
-      "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        `http://localhost:5000/api/courses/${action.payload}`,
       { withCredentials: true }
     );
-    yield put(res.data);
+    yield put(deleteCouserSuccess(res.data));
   } catch (error) {
-    yield put(error.message);
+    yield put(deleteCouserFailure(error.message));
   }
 }
 

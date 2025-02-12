@@ -1,9 +1,13 @@
 import axios from "axios";
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
+  createDepartmentFailure,
+  createDepartmentRequest,
+  createDepartmentSuccess,
   createStudentFailure,
   createStudentRequest,
   createStudentSuccess,
+  deleteDepartmentRequest,
   deleteStudentFailure,
   deleteStudentRequest,
   deleteStudentSuccess,
@@ -11,6 +15,9 @@ import {
   getDepartmentSuccess,
   getStudentrequest,
   getStudentsuccess,
+  updateDepartmentFailure,
+  updateDepartmentRequest,
+  updateDepartmentSuccess,
   updateStudentFailure,
   updateStudentRequest,
   updateStudentSuccess,
@@ -92,6 +99,53 @@ function* getAllDepartments() {
     }
 }
 
+function* createDepartment(action) {
+  try {
+    const res = yield call(axios.post, "http://localhost:5000/api/department", action.payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+      
+    })
+
+    yield put(createDepartmentSuccess(res.data));
+  } catch (error) {
+    yield put(createDepartmentFailure(error.message))
+  }
+}
+
+function* upateDepartment(action) {
+  try {
+    const res = yield call(axios.post, "http://localhost:5000/api/department", action.payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    })
+    yield put(updateDepartmentSuccess(res.data));
+      
+  } catch (error) {
+    yield put(updateDepartmentFailure(error.message))
+    
+  }
+}
+
+function* deleteDepartment(action) {
+  try {
+    const res = yield call(axios.delete, `http://localhost:5000/api/department/${action.payload}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    })
+    yield put(updateDepartmentSuccess(res.data));
+
+  } catch (error) {
+    yield put(updateDepartmentFailure(error.message))
+
+  }
+}
 function* watchCreateStudent() {
   yield takeLatest(createStudentRequest, createStudent);
 }
@@ -111,11 +165,24 @@ function* watchDeleteStudent() {
 function* watchGetAllDepartments() {
   yield takeLatest(getDepartement, getAllDepartments);
 }
+function* watchCreateDepartment() {
+  yield takeLatest(createDepartmentRequest, createDepartment);
+}
 
+function* watchDeleteDepartment() {
+  yield takeLatest(deleteDepartmentRequest, deleteDepartment);
+}
+
+function * watchUpdateDepartment() {
+  yield takeLatest(updateDepartmentRequest, upateDepartment);
+}
 export {
   watchCreateStudent,
   watchGetStudent,
   watchUpdateStudent,
     watchDeleteStudent,
-  watchGetAllDepartments
+  watchGetAllDepartments,
+  watchCreateDepartment,
+  watchDeleteDepartment,
+  watchUpdateDepartment
 };
