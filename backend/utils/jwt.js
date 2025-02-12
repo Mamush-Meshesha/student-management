@@ -9,7 +9,7 @@ export const generateToken = (res, id, role) => {
     httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     maxAge: 3600 * 1000,
-    sameSite: "none",
+    sameSite: "strict",
   });
 
   return token; // Ensure the token is returned
