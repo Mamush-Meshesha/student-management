@@ -20,11 +20,12 @@ const isAuth = useSelector((state) => state.auth);
     await navigate("/");
   };
 
-  useEffect(() => {
-    if (isAuth.isAuth) {
-      navigate("/");
-    }
-  }, [isAuth.isAuth, navigate]);
+ useEffect(() => {
+   if (isAuth.isAuth) {
+     navigate("/", { replace: true }); 
+   }
+ }, [isAuth.isAuth, navigate]);
+
 
 
   return (
