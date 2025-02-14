@@ -1,4 +1,3 @@
-import axios from "axios";
 import { call, put } from "redux-saga/effects";
 import { takeEvery } from "redux-saga/effects";
 import {
@@ -12,17 +11,17 @@ import {
   getCoursesSuccess,
   updateCouserRequest,
 } from "../redux/course";
+import api from "../../utils/api";
 function* createCourse(action) {
   try {
     const res = yield call(
-      axios.post,
-      "http://localhost:5000/api/courses",
+      api.post,
+      "/courses",
       action.payload,
       {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       }
     );
     yield put(createCouserSuccess(res.data));
@@ -34,9 +33,9 @@ function* createCourse(action) {
 function* getCourse() {
   try {
     const res = yield call(
-      axios.get,
-      "http://localhost:5000/api/courses",
-      { withCredentials: true }
+      api.get,
+      "/courses",
+    
     );
     yield put(getCoursesSuccess(res.data));
   } catch (error) {
@@ -46,11 +45,10 @@ function* getCourse() {
 
 function* updateCourse(action) {
   try {
-    const res = yield call(axios.put, `http://localhost:5000/api/courses/${action.payload.id}`, action.payload, {
+    const res = yield call(api.put, `/courses/${action.payload.id}`, action.payload, {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
     });
     yield put(res.data);
   } catch (error) {
@@ -61,9 +59,8 @@ function* updateCourse(action) {
 function* deleteCourse(action) {
   try {
     const res = yield call(
-      axios.delete,
-        `http://localhost:5000/api/courses/${action.payload}`,
-      { withCredentials: true }
+      api.delete,
+        `/courses/${action.payload}`,
     );
     yield put(deleteCouserSuccess(res.data));
   } catch (error) {

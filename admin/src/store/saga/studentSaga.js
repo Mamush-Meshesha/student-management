@@ -1,4 +1,3 @@
-import axios from "axios";
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   createDepartmentFailure,
@@ -49,7 +48,7 @@ function* getStudents() {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
+      
     });
     yield put(getStudentsuccess(res.data));
   } catch (error) {
@@ -59,11 +58,11 @@ function* getStudents() {
 
 function* updateStudent(action) {
   try {
-    const res = yield call(axios.put,  `http://localhost:5000/api/student/${action.payload.id}`, action.payload, {
+    const res = yield call(api.put,  `/student/${action.payload.id}`, action.payload, {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
+      
     });
     yield put(updateStudentSuccess(res.data));
   } catch (error) {
@@ -73,11 +72,11 @@ function* updateStudent(action) {
 
 function* deleteStudent(action) {
   try {
-    const res = yield call(axios.delete, `http://localhost:5000/api/student/${action.payload}`, {
+    const res = yield call(api.delete, `/student/${action.payload}`, {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
+      
     });
     yield put(deleteStudentSuccess(res.data));
   } catch (error) {
@@ -100,11 +99,11 @@ function* getAllDepartments() {
 
 function* createDepartment(action) {
   try {
-    const res = yield call(axios.post, "http://localhost:5000/api/department", action.payload, {
+    const res = yield call(api.post, "/department", action.payload, {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
+      
       
     })
 
@@ -116,11 +115,11 @@ function* createDepartment(action) {
 
 function* upateDepartment(action) {
   try {
-    const res = yield call(api.post, "http://localhost:5000/api/department", action.payload, {
+    const res = yield call(api.post, "/department", action.payload, {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
+      
     })
     yield put(updateDepartmentSuccess(res.data));
       
@@ -132,11 +131,11 @@ function* upateDepartment(action) {
 
 function* deleteDepartment(action) {
   try {
-    const res = yield call(api.delete, `http://localhost:5000/api/department/${action.payload}`, {
+    const res = yield call(api.delete, `/department/${action.payload}`, {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
+      
     })
     yield put(updateDepartmentSuccess(res.data));
 
