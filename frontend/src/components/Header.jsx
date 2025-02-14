@@ -1,7 +1,7 @@
 import { CgProfile } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutRequest } from "../store/redux/auth";
+import { logoutFailure, logoutRequest, logoutSuccess } from "../store/redux/auth";
 import { useNavigate } from "react-router-dom";
 
 
@@ -10,11 +10,15 @@ const Header = () => {
   console.log(user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const handleLogout = () => {
-    dispatch(logoutRequest());
-    navigate("/")
-
+const handleLogout = async () => {
+  dispatch(logoutRequest());
+  try {
+    dispatch(logoutSuccess());
+    navigate("/login");
+  } catch (error) {
+    dispatch(logoutFailure(error.message));
   }
+};
   return (
     <div className=" h-[70px] shadow-sm">
       <div className="container mx-auto h-full">
