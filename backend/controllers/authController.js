@@ -6,7 +6,6 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find student by email
     const student = await prisma.student.findUnique({
       where: { email },
     });
@@ -14,13 +13,11 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Compare passwords
     const passwordMatch = await bcrypt.compare(password, student.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
    const token = generateToken(res, student.id, student.role);
-    // Login successful
      res.status(200).json({
        message: "Login successful",
        token,

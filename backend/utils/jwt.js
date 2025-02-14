@@ -11,5 +11,5 @@ export const generateToken = (res, id, role) => {
     sameSite: "strict",
   });
 
-  return token; // Ensure the token is returned
+  return token; 
 };

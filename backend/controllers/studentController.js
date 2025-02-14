@@ -1,4 +1,3 @@
-// import prisma from "../utils/prisma";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
 import { generateToken } from '../utils/jwt.js';
@@ -12,9 +11,8 @@ export const createStudent = async (req, res) => {
       departmentId,
       grade,
       role = "STUDENT",
-    } = req.body; // Default role to STUDENT
+    } = req.body; 
 
-    // Check if email already exists
     const existingStudent = await prisma.student.findUnique({
       where: { email },
     });
@@ -23,24 +21,21 @@ export const createStudent = async (req, res) => {
       return res.status(400).json({ error: "Email already exists" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create student
     const student = await prisma.student.create({
       data: {
         name,
         email,
         password: hashedPassword,
         department: {
-          connect: { id: departmentId }, // Connect to existing department
+          connect: { id: departmentId }, 
         },
         grade,
-        role, // Assign role
+        role, 
       },
     });
 
-    // Generate JWT token
     generateToken(res, student.id, student.role);
 
     res.status(201).json({ message: "Student created successfully", student });
@@ -75,7 +70,7 @@ export const updateStudent = async (req, res) => {
   try {
      let hashedPassword = password;
      if (password) {
-       hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+       hashedPassword = await bcrypt.hash(password, 10);
      }
     const updatedStudent = await prisma.student.update({
       where: { id },
