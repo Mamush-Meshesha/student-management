@@ -14,7 +14,7 @@ const handleLogout = async () => {
   dispatch(logoutRequest());
   try {
     dispatch(logoutSuccess());
-    navigate("/login");
+    navigate("/");
   } catch (error) {
     dispatch(logoutFailure(error.message));
   }
