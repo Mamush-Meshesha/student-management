@@ -27,8 +27,8 @@ import api from "../../utils/api";
 function* createStudent(action) {
   try {
     const res = yield call(
-      axios.post,
-      "http://localhost:5000/api/student",
+      api.post,
+      "/student",
       action.payload,
       {
         headers: {
