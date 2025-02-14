@@ -1,10 +1,10 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import axios from "axios";
 import { getCoursesFailure, getCoursesRequest, getCoursesSuccess } from "../redux/course";
+import api from "../../utils/api";
 
 function* getCourses() {
   try {
-      const res = yield call(axios.get, "http://localhost:5000/api/courses", {
+      const res = yield call(api.get, "/courses", {
           headers: {
             "Content-Type": "application/json",
           },

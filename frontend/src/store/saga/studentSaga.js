@@ -1,15 +1,14 @@
-import axios from "axios";
 import { call, put } from "redux-saga/effects";
 import { getUserFailure, getUserRequest, getUserSuccess } from "../redux/student";
 import { takeEvery } from 'redux-saga/effects';
+import api from "../../utils/api";
 
 function* getStudent() {
     try {
-        const res = yield call(axios.get, "http://localhost:5000/api/students", {
+        const res = yield call(api.get, "/students", {
             headers: {
                 "Content-Type": "application/json"
             },
-            withCredentials: true
         })
 
         yield put(getUserSuccess(res.data.user))
