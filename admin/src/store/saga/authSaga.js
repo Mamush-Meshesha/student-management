@@ -8,18 +8,18 @@ import {
   logoutRequest,
   logoutSuccess,
 } from "../redux/auth";
+import api from "../../utils/api";
 
 function* login(action) {
   try {
     const res = yield call(
-      axios.post,
+      api.post,
       "https://student-management-janl.onrender.com/api/student/login",
       action.payload,
       {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       }
     );
     console.log("API Response:", res.data);

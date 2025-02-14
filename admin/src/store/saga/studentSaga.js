@@ -22,6 +22,7 @@ import {
   updateStudentRequest,
   updateStudentSuccess,
 } from "../redux/student";
+import api from "../../utils/api";
 
 function* createStudent(action) {
   try {
@@ -87,11 +88,10 @@ function* deleteStudent(action) {
 
 function* getAllDepartments() {
     try {
-        const res = yield call(axios.get, "http://localhost:5000/api/department", {
+        const res = yield call(api.get, "/department", {
             headers: {
                 "Content-Type": "application/json",
             },
-            withCredentials: true,
         });
         yield put(getDepartmentSuccess(res.data));
     } catch (error) {
@@ -117,7 +117,7 @@ function* createDepartment(action) {
 
 function* upateDepartment(action) {
   try {
-    const res = yield call(axios.post, "http://localhost:5000/api/department", action.payload, {
+    const res = yield call(api.post, "http://localhost:5000/api/department", action.payload, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -133,7 +133,7 @@ function* upateDepartment(action) {
 
 function* deleteDepartment(action) {
   try {
-    const res = yield call(axios.delete, `http://localhost:5000/api/department/${action.payload}`, {
+    const res = yield call(api.delete, `http://localhost:5000/api/department/${action.payload}`, {
       headers: {
         "Content-Type": "application/json",
       },
