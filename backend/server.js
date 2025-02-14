@@ -16,7 +16,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://student-management-ochre.vercel.app",
+      "https://student-management-five-delta.vercel.app/",
     ],
     credentials: true,
   })
