@@ -8,24 +8,19 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-const isAuth = useSelector((state) => state.auth);
+  const { isLoading, isAuth } = useSelector((state) => state.auth);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      email,
-      password,
-    };
-
+    const data = { email, password };
     dispatch(authRequest(data));
   };
 
-// useEffect(() => {
-//   if (isAuth.isAuth) {
-//     setTimeout(() => {
-//       navigate("/", { replace: true });
-//     }, 100); 
-//   }
-// }, [isAuth.isAuth, navigate]);
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/", { replace: true });
+    }
+  }, [isAuth, navigate]);
 
 
 
@@ -78,9 +73,33 @@ const isAuth = useSelector((state) => state.auth);
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-200"
+            className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-200 flex items-center justify-center"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? (
+              <svg
+                className="animate-spin h-5 w-5 mr-3 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
       </div>

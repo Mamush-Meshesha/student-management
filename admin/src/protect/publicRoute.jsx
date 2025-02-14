@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
@@ -17,7 +17,7 @@ import { jwtDecode } from "jwt-decode";
 //   }
 
 //   return children;
-const PublicRoute = ({ children }) => {
+function PublicRoute() {
   const token = Cookies.get("jwt");
 
   if (token) {
@@ -32,8 +32,7 @@ const PublicRoute = ({ children }) => {
     }
   }
 
-  return children;
-
-};
+  return <Outlet />; // Allow access to login page
+}
 
 export default PublicRoute;

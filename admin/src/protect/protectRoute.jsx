@@ -39,7 +39,7 @@
 
 // export default ProtectedRoute;
 
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
@@ -61,13 +61,15 @@ import { jwtDecode } from "jwt-decode";
 //   }
 
 //   return children;
-const ProtectedRoute = ({ children }) => {
+function ProtectedRoute() {
   const token = Cookies.get("jwt");
 
   if (!token) return <Navigate to="/login" replace />;
-  
+
   try {
     const decoded = jwtDecode(token);
+    console.log("Decoded Token:", decoded);
+
     if (decoded.role !== "ADMIN") {
       return <Navigate to="/login" replace />;
     }
@@ -76,10 +78,8 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
-};
-
+  return <Outlet />;
+}
 
 export default ProtectedRoute;
-
 
