@@ -1,6 +1,6 @@
-import { Navigate, Outlet } from "react-router-dom";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
+// import { Navigate, Outlet } from "react-router-dom";
+// import Cookies from "js-cookie";
+// import { jwtDecode } from "jwt-decode";
 
 // const PublicRoute = ({ children }) => {
 //   const token = Cookies.get("jwt");
@@ -17,8 +17,11 @@ import { jwtDecode } from "jwt-decode";
 //   }
 
 //   return children;
+import { Navigate, Outlet } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
+
 function PublicRoute() {
-  const token = Cookies.get("jwt");
+  const token = localStorage.getItem("token");
 
   if (token) {
     try {
@@ -28,7 +31,7 @@ function PublicRoute() {
       }
     } catch (error) {
       console.error("Invalid token:", error);
-      Cookies.remove("jwt"); // Clear invalid token
+      localStorage.removeItem("token"); // Clear invalid token
     }
   }
 
@@ -36,3 +39,4 @@ function PublicRoute() {
 }
 
 export default PublicRoute;
+

@@ -22,7 +22,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import { Outlet } from "react-router-dom";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { logoutRequest } from "../store/redux/auth";
+import { logoutFailure, logoutRequest, logoutSuccess } from "../store/redux/auth";
 
 const drawerWidth = 240;
 
@@ -117,11 +117,15 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(true);
 const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logoutRequest());
+const handleLogout = async () => {
+  dispatch(logoutRequest());
+  try {
+    dispatch(logoutSuccess());
     navigate("/login");
-
-  };
+  } catch (error) {
+    dispatch(logoutFailure(error.message));
+  }
+};
   const handleDrawerOpen = () => {
     setOpen(true);
   };

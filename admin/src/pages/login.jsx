@@ -8,19 +8,20 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoading, isAuth } = useSelector((state) => state.auth);
-
+  const { isLoading,  } = useSelector((state) => state.auth);
+const user = localStorage.getItem("user")
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { email, password };
     dispatch(authRequest(data));
+    navigate("/", { replace: true })
   };
 
   useEffect(() => {
-    if (isAuth) {
+    if (user) {
       navigate("/", { replace: true });
     }
-  }, [isAuth, navigate]);
+  }, [user, navigate]);
 
 
 
