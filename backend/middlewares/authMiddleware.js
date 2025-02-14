@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken";
 import prisma from "../utils/prisma.js";
 
-import jwt from "jsonwebtoken";
-import prisma from "../utils/prisma.js";
 
 export const protect = async (req, res, next) => {
   console.log("🔹 Protect Middleware Start");
