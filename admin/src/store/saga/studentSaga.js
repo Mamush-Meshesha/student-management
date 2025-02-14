@@ -34,7 +34,6 @@ function* createStudent(action) {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       }
     );
 
@@ -46,7 +45,7 @@ function* createStudent(action) {
 
 function* getStudents() {
   try {
-    const res = yield call(axios.get, "http://localhost:5000/api/students", {
+    const res = yield call(api.get, "/students", {
       headers: {
         "Content-Type": "application/json",
       },
