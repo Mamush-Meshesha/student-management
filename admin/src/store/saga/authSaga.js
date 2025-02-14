@@ -13,7 +13,7 @@ function* login(action) {
   try {
     const res = yield call(
       axios.post,
-      "http://localhost:5000/api/student/login",
+      "https://student-management-janl.onrender.com/api/student/login",
       action.payload,
       {
         headers: {
