@@ -1,14 +1,21 @@
 import jwt from "jsonwebtoken";
 import prisma from "../utils/prisma.js";
 
+import jwt from "jsonwebtoken";
+import prisma from "../utils/prisma.js";
+
 export const protect = async (req, res, next) => {
   console.log("🔹 Protect Middleware Start");
 
-  let token = req.cookies.jwt;
-  console.log("🔹 Token from Cookie:", token);
+  // Extract token from Authorization header
+  const authHeader = req.headers.authorization;
+  let token;
 
-  if (!token) {
-    console.log("🔸 No Token Found");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
+    console.log("🔹 Token from Authorization Header:", token);
+  } else {
+    console.log("🔸 No Token Found in Authorization Header");
     return res.status(401).json({ message: "Not authorized, no token" });
   }
 
@@ -36,12 +43,13 @@ export const protect = async (req, res, next) => {
 
     console.log("✅ User Authenticated:", req.user);
     console.log("✅ Calling Next Middleware...");
-    next(); // Important! Call next() to continue request processing
+    next();
   } catch (error) {
     console.error("🔴 JWT verification error:", error);
     res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
+
 
 export const protectRole = (requiredRole) => {
   return (req, res, next) => {
