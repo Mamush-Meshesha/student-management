@@ -8,7 +8,6 @@ function* getCourses() {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true
       });
       yield put(getCoursesSuccess(res.data))
   } catch (error) {

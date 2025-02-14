@@ -12,11 +12,11 @@ function PublicRoute() {
       }
     } catch (error) {
       console.error("Invalid token:", error);
-      localStorage.removeItem("token"); // Clear invalid token
+      localStorage.removeItem("token"); 
     }
   }
 
-  return <Outlet />; // Allow access to login page
+  return <Outlet />; 
 }
 
 export default PublicRoute;

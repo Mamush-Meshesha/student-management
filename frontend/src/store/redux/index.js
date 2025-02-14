@@ -4,8 +4,8 @@ import userReducer from "./student";
 import authReducer from "./auth"
 
 const rootReducer = combineReducers({
-  auth: authReducer, // Persisted auth state
-  student: userReducer, // Non-persisted student state
-  course: coursesReducer, // Non-persisted course state
+  auth: authReducer, 
+  student: userReducer, 
+  course: coursesReducer, 
 });
 export default rootReducer

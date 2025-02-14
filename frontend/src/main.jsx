@@ -16,7 +16,6 @@ createRoot(document.getElementById("root")).render(
       <PersistGate loading={null} persistor={persistor}>
         <Router>
           <Routes>
-            {/* <Route path="/" element={<LoginPage />} />{" "} */}
             <Route element={<PublicRoute />}>
               <Route path="" element={<LoginPage />} />
             </Route>

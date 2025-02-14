@@ -72,10 +72,9 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-200 flex items-center justify-center"
+            className="w-full py-3 !bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-200 flex items-center justify-center"
             disabled={isLoading}
           >
             {isLoading ? (

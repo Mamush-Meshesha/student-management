@@ -7,7 +7,6 @@ const Layout = ({ children }) => {
       {/* Header */}
       <Header />
 
-      {/* Main content should expand to fill the available space */}
       <main className="flex-grow">{children}</main>
 
       {/* Footer remains at the bottom */}

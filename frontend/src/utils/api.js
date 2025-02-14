@@ -1,11 +1,10 @@
-// api.js
+
 import axios from "axios";
 
 const api = axios.create({
   baseURL: "https://student-management-janl.onrender.com/api",
 });
 
-// Request interceptor to add the token to headers
 api.interceptors.request.use(
   (config) => {
     const jwt = localStorage.getItem("token");

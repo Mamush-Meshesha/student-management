@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
 import Card from "./components/cards/Card";
 import Table from "./components/cards/Table";
 import Layout from "./layouts/default";
