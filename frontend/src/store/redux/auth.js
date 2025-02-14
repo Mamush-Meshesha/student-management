@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
-  token: null,
-  isAuth: false,
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  token: localStorage.getItem("token"),
+  isAuth: !!localStorage.getItem("token"),
   isLoading: false,
   error: null,
 };
@@ -20,6 +20,8 @@ export const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuth = true;
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      localStorage.setItem("token", action.payload.token);
     },
     authFailure: (state, action) => {
       state.isLoading = false;
@@ -28,9 +30,13 @@ export const authSlice = createSlice({
     logoutRequest: (state) => {
       state.isLoading = true;
     },
-    logoutSuccess: (state, action) => {
+    logoutSuccess: (state) => {
       state.isLoading = false;
-      state.user = action.payload;
+      state.user = null;
+      state.isAuth = false;
+      state.token = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     },
     logoutFailure: (state, action) => {
       state.isLoading = false;

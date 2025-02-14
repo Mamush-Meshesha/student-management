@@ -8,6 +8,7 @@ import { store, persistor } from "./store/store.js";
 import LoginPage from "./pages/login.jsx"; 
 import { PersistGate } from "redux-persist/integration/react";
 import ProtectedRoute from "./protect/protectRoute";
+import PublicRoute from "./protect/publicRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -16,22 +17,12 @@ createRoot(document.getElementById("root")).render(
         <Router>
           <Routes>
             {/* <Route path="/" element={<LoginPage />} />{" "} */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <LoginPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <App />
-                </ProtectedRoute>
-              }
-            />{" "}
+            <Route element={<PublicRoute />}>
+              <Route path="" element={<LoginPage />} />
+            </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/home" element={<App />} />
+            </Route>
           </Routes>
         </Router>
       </PersistGate>

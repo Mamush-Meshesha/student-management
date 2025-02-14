@@ -4,15 +4,13 @@ import { authFailure, authRequest, authSuccess, logoutFailure, logoutRequest, lo
 
 function* login(action) {
     try {
-        const res = yield call(axios.post, "http://localhost:5000/api/student/login", action.payload, {
+        const res = yield call(axios.post, "https://student-management-janl.onrender.com/api/student/login", action.payload, {
             headers: {
                 "Content-Type": "application/json",
             },
-            withCredentials: true
         })
         console.log("API Response:", res.data);
-        //  localStorage.setItem("token", res.data.token);
-        //  localStorage.setItem("user", JSON.stringify(res.data.user));
+
         yield put(authSuccess(res.data))
     } catch (error) {
         yield put(authFailure(error.message))
